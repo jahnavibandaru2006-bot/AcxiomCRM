@@ -1,0 +1,398 @@
+@model IEnumerable<AcxiomCRM.Models.AuditLog>
+
+@{
+    ViewData["Title"] = "Audit Logs";
+
+    var users = ViewBag.Users as List<string>
+        ?? new List<string>();
+
+    var modules = ViewBag.Modules as List<string>
+        ?? new List<string>();
+
+    var actions = ViewBag.Actions as List<string>
+        ?? new List<string>();
+
+    string? selectedUser = ViewBag.SelectedUser;
+    string? selectedModule = ViewBag.SelectedModule;
+    string? selectedAction = ViewBag.SelectedAction;
+
+    string? fromDate = ViewBag.FromDate;
+    string? toDate = ViewBag.ToDate;
+}
+
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="mb-4">
+        <h1 class="fw-bold">Audit Logs</h1>
+
+        <p class="text-muted">
+            Security and CRM activity history
+        </p>
+    </div>
+
+    <!-- Filters -->
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+            <strong>Filter Audit Logs</strong>
+        </div>
+
+        <div class="card-body">
+
+            <form method="get"
+                  asp-controller="AuditLogs"
+                  asp-action="Index">
+
+                <div class="row g-3">
+
+                    <!-- User -->
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            User
+                        </label>
+
+                        <select name="userId"
+                                class="form-select">
+
+                            <option value="">
+                                All Users
+                            </option>
+
+                            @foreach (var user in users)
+                            {
+                                if (selectedUser == user)
+                                {
+                                    <option value="@user" selected>
+                                        @user
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@user">
+                                        @user
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                    </div>
+
+                    <!-- Module -->
+                    <div class="col-md-2">
+
+                        <label class="form-label">
+                            Module
+                        </label>
+
+                        <select name="module"
+                                class="form-select">
+
+                            <option value="">
+                                All Modules
+                            </option>
+
+                            @foreach (var module in modules)
+                            {
+                                if (selectedModule == module)
+                                {
+                                    <option value="@module" selected>
+                                        @module
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@module">
+                                        @module
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                    </div>
+
+                    <!-- Action -->
+                    <div class="col-md-2">
+
+                        <label class="form-label">
+                            Action
+                        </label>
+
+                        <select name="action"
+                                class="form-select">
+
+                            <option value="">
+                                All Actions
+                            </option>
+
+                            @foreach (var item in actions)
+                            {
+                                if (selectedAction == item)
+                                {
+                                    <option value="@item" selected>
+                                        @item
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@item">
+                                        @item
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                    </div>
+
+                    <!-- From Date -->
+                    <div class="col-md-2">
+
+                        <label class="form-label">
+                            From Date
+                        </label>
+
+                        <input type="date"
+                               name="fromDate"
+                               value="@fromDate"
+                               class="form-control" />
+
+                    </div>
+
+                    <!-- To Date -->
+                    <div class="col-md-2">
+
+                        <label class="form-label">
+                            To Date
+                        </label>
+
+                        <input type="date"
+                               name="toDate"
+                               value="@toDate"
+                               class="form-control" />
+
+                    </div>
+
+                    <!-- Filter -->
+                    <div class="col-md-1 d-flex align-items-end">
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Filter
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-3">
+
+                    <a asp-controller="AuditLogs"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary btn-sm">
+                        Clear Filters
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Audit Events -->
+    <div class="card shadow-sm">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+
+            <strong>
+                Audit Events
+            </strong>
+
+            <span class="badge bg-secondary">
+                @ViewBag.AuditCount events
+            </span>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead>
+
+                    <tr>
+                        <th>Date</th>
+                        <th>User ID</th>
+                        <th>Action</th>
+                        <th>Module</th>
+                        <th>Record</th>
+                        <th>IP Address</th>
+                        <th>Changes</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7"
+                                class="text-center text-muted py-4">
+
+                                No audit events found
+                                for the selected filters.
+
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var log in Model)
+                        {
+                            <tr>
+
+                                <!-- Date -->
+                                <td>
+                                    @log.CreatedDate.ToLocalTime().ToString("dd-MM-yyyy HH:mm")
+                                </td>
+
+                                <!-- User -->
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(log.UserId))
+                                    {
+                                        <small>
+                                            @log.UserId
+                                        </small>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            System
+                                        </span>
+                                    }
+                                </td>
+
+                                <!-- Action -->
+                                <td>
+
+                                    @if (log.Action == "Create")
+                                    {
+                                        <span class="badge bg-success">
+                                            Create
+                                        </span>
+                                    }
+                                    else if (log.Action == "Update")
+                                    {
+                                        <span class="badge bg-primary">
+                                            Update
+                                        </span>
+                                    }
+                                    else if (log.Action == "Delete")
+                                    {
+                                        <span class="badge bg-danger">
+                                            Delete
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            @log.Action
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <!-- Module -->
+                                <td>
+                                    <strong>
+                                        @log.EntityName
+                                    </strong>
+                                </td>
+
+                                <!-- Record -->
+                                <td>
+                                    #@log.RecordId
+                                </td>
+
+                                <!-- IP -->
+                                <td>
+                                    @log.IpAddress
+                                </td>
+
+                                <!-- Changes -->
+                                <td>
+
+                                    @if (!string.IsNullOrWhiteSpace(log.OldValue) ||
+                                         !string.IsNullOrWhiteSpace(log.NewValue))
+                                    {
+                                        <details>
+
+                                            <summary class="text-primary"
+                                                     style="cursor:pointer;">
+                                                View changes
+                                            </summary>
+
+                                            <div class="mt-2 small">
+
+                                                @if (!string.IsNullOrWhiteSpace(log.OldValue))
+                                                {
+                                                    <div class="mb-2">
+
+                                                        <strong>
+                                                            Old:
+                                                        </strong>
+
+                                                        <div class="text-muted text-break">
+                                                            @log.OldValue
+                                                        </div>
+
+                                                    </div>
+                                                }
+
+                                                @if (!string.IsNullOrWhiteSpace(log.NewValue))
+                                                {
+                                                    <div>
+
+                                                        <strong>
+                                                            New:
+                                                        </strong>
+
+                                                        <div class="text-muted text-break">
+                                                            @log.NewValue
+                                                        </div>
+
+                                                    </div>
+                                                }
+
+                                            </div>
+
+                                        </details>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            —
+                                        </span>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

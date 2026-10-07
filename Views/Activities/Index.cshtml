@@ -1,0 +1,62 @@
+@model IEnumerable<AcxiomCRM.Models.Activity>
+
+@{
+    ViewData["Title"] = "Activities";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Activities</h1>
+        <p class="text-muted">Manage calls, meetings, emails and tasks.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">+ Create Activity</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                No activities found. Create your first activity.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Customer</th>
+                            <th>Lead</th>
+                            <th>Opportunity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Type</td>
+                                <td><strong>@item.Subject</strong></td>
+                                <td>@item.ActivityDate.ToString("dd-MM-yyyy HH:mm")</td>
+                                <td>@item.Status</td>
+                                <td>@(item.Customer?.Name ?? "-")</td>
+                                <td>@(item.Lead?.Name ?? "-")</td>
+                                <td>@(item.Opportunity?.Name ?? "-")</td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

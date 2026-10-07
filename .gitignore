@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+.DS_Store
+
+# SQLite database and temporary files
+acxiomcrm.db
+acxiomcrm.db-wal
+acxiomcrm.db-shm
+
+# Local authentication/session data
+cookies.txt

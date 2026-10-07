@@ -1,0 +1,363 @@
+@model AcxiomCRM.Models.DashboardViewModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Dashboard";
+
+    var role =
+        User.IsInRole("Admin")
+            ? "Admin"
+            : User.IsInRole("Manager")
+                ? "Manager"
+                : "Sales Executive";
+}
+
+<div class="container-fluid py-3">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">AcxiomCRM Dashboard</h2>
+            <p class="text-muted mb-0">
+                Welcome, @User.Identity?.Name
+                <span class="badge bg-primary ms-2">@role</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Date Filter -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form method="get"
+                  asp-controller="Dashboard"
+                  asp-action="Index"
+                  class="row g-3 align-items-end">
+
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">
+                        Date Range
+                    </label>
+
+                    <select name="period"
+                            id="period"
+                            class="form-select"
+                            onchange="toggleCustomDates()">
+
+                        <option value="Today"
+                                selected="@(Model.Period == "Today")">
+                            Today
+                        </option>
+
+                        <option value="ThisWeek"
+                                selected="@(Model.Period == "ThisWeek")">
+                            This Week
+                        </option>
+
+                        <option value="ThisMonth"
+                                selected="@(Model.Period == "ThisMonth")">
+                            This Month
+                        </option>
+
+                        <option value="Custom"
+                                selected="@(Model.Period == "Custom")">
+                            Custom Range
+                        </option>
+                    </select>
+                </div>
+
+                <div id="customDates"
+                     class="row col-md-6 g-3"
+                     style="display:@(Model.Period == "Custom" ? "flex" : "none");">
+
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            From
+                        </label>
+
+                        <input type="date"
+                               name="fromDate"
+                               class="form-control"
+                               value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            To
+                        </label>
+
+                        <input type="date"
+                               name="toDate"
+                               class="form-control"
+                               value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit"
+                            class="btn btn-primary w-100">
+                        Apply Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        Total Customers
+                    </div>
+                    <div class="fs-2 fw-bold">
+                        @Model.TotalCustomers
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        Total Leads
+                    </div>
+                    <div class="fs-2 fw-bold">
+                        @Model.TotalLeads
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        Open Leads
+                    </div>
+                    <div class="fs-2 fw-bold">
+                        @Model.OpenLeads
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        Total Opportunities
+                    </div>
+                    <div class="fs-2 fw-bold">
+                        @Model.TotalOpportunities
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        Open Opportunities
+                    </div>
+                    <div class="fs-2 fw-bold">
+                        @Model.OpenOpportunities
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        Won Opportunities
+                    </div>
+                    <div class="fs-2 fw-bold">
+                        @Model.WonOpportunities
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        Lost Opportunities
+                    </div>
+                    <div class="fs-2 fw-bold">
+                        @Model.LostOpportunities
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        Pipeline Value
+                    </div>
+                    <div class="fs-2 fw-bold">
+                        ₹@Model.TotalPipelineValue.ToString("N2")
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        Pending Follow-Ups
+                    </div>
+                    <div class="fs-2 fw-bold">
+                        @Model.PendingFollowUps
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-4">
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white fw-bold">
+                    Lead Status
+                </div>
+
+                <div class="card-body">
+                    <canvas id="leadStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white fw-bold">
+                    Opportunity Pipeline
+                </div>
+
+                <div class="card-body">
+                    <canvas id="opportunityPipelineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white fw-bold">
+                    Monthly Sales
+                </div>
+
+                <div class="card-body">
+                    <canvas id="monthlySalesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    function toggleCustomDates() {
+        const period =
+            document.getElementById("period").value;
+
+        const customDates =
+            document.getElementById("customDates");
+
+        customDates.style.display =
+            period === "Custom" ? "flex" : "none";
+    }
+
+    const leadLabels =
+        @Html.Raw(JsonSerializer.Serialize(Model.LeadStatusLabels));
+
+    const leadValues =
+        @Html.Raw(JsonSerializer.Serialize(Model.LeadStatusValues));
+
+    const opportunityLabels =
+        @Html.Raw(JsonSerializer.Serialize(Model.OpportunityStageLabels));
+
+    const opportunityValues =
+        @Html.Raw(JsonSerializer.Serialize(Model.OpportunityStageValues));
+
+    const monthlyLabels =
+        @Html.Raw(JsonSerializer.Serialize(Model.MonthlySalesLabels));
+
+    const monthlyValues =
+        @Html.Raw(JsonSerializer.Serialize(Model.MonthlySalesValues));
+
+    new Chart(
+        document.getElementById("leadStatusChart"),
+        {
+            type: "doughnut",
+            data: {
+                labels: leadLabels,
+                datasets: [{
+                    data: leadValues
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        }
+    );
+
+    new Chart(
+        document.getElementById("opportunityPipelineChart"),
+        {
+            type: "bar",
+            data: {
+                labels: opportunityLabels,
+                datasets: [{
+                    label: "Opportunities",
+                    data: opportunityValues
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+    new Chart(
+        document.getElementById("monthlySalesChart"),
+        {
+            type: "line",
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: "Won Sales",
+                    data: monthlyValues,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }
+    );
+</script>

@@ -1,0 +1,374 @@
+@model AcxiomCRM.Models.ReportsViewModel
+
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+        <h1 class="fw-bold">Reports</h1>
+        <p class="text-muted">
+            Customer, lead, follow-up, opportunity, pipeline and activity reports
+        </p>
+    </div>
+
+    <!-- CUSTOMER REPORT -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 fw-bold">Customer Report</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded">
+                        <div class="text-muted">Total Customers</div>
+                        <h3>@Model.TotalCustomers</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded">
+                        <div class="text-muted">Active</div>
+                        <h3>@Model.ActiveCustomers</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded">
+                        <div class="text-muted">Inactive</div>
+                        <h3>@Model.InactiveCustomers</h3>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var row in Model.CustomerStatusReport)
+                {
+                    <tr>
+                        <td>@row.Label</td>
+                        <td>@row.Count</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- LEAD REPORT -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 fw-bold">Lead Report</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3 mb-3">
+                <div class="col-md-3">
+                    <strong>Total</strong>
+                    <h3>@Model.TotalLeads</h3>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>New</strong>
+                    <h3>@Model.NewLeads</h3>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Qualified</strong>
+                    <h3>@Model.QualifiedLeads</h3>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Converted</strong>
+                    <h3>@Model.ConvertedLeads</h3>
+                </div>
+            </div>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Count</th>
+                        <th>Expected Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var row in Model.LeadStatusReport)
+                {
+                    <tr>
+                        <td>@row.Label</td>
+                        <td>@row.Count</td>
+                        <td>₹@row.Value.ToString("N2")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FOLLOW-UP REPORT -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 fw-bold">Follow-Up Report</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3 mb-3">
+                <div class="col-md-3">
+                    <strong>Total</strong>
+                    <h3>@Model.TotalFollowUps</h3>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Planned</strong>
+                    <h3>@Model.PlannedFollowUps</h3>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Completed</strong>
+                    <h3>@Model.CompletedFollowUps</h3>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Overdue</strong>
+                    <h3>@Model.OverdueFollowUps</h3>
+                </div>
+            </div>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var row in Model.FollowUpStatusReport)
+                {
+                    <tr>
+                        <td>@row.Label</td>
+                        <td>@row.Count</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- OPPORTUNITY / PIPELINE REPORT -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 fw-bold">Opportunity & Pipeline Report</h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <strong>Total Opportunities</strong>
+                    <h3>@Model.TotalOpportunities</h3>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Open</strong>
+                    <h3>@Model.OpenOpportunities</h3>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Won</strong>
+                    <h3>@Model.WonOpportunities</h3>
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Lost</strong>
+                    <h3>@Model.LostOpportunities</h3>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded">
+                        <div class="text-muted">
+                            Total Pipeline
+                        </div>
+                        <h3>₹@Model.TotalPipelineValue.ToString("N2")</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded">
+                        <div class="text-muted">
+                            Weighted Pipeline
+                        </div>
+                        <h3>₹@Model.WeightedPipelineValue.ToString("N2")</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded">
+                        <div class="text-muted">
+                            Won Revenue
+                        </div>
+                        <h3>₹@Model.WonRevenue.ToString("N2")</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>Count</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                @foreach (var row in Model.OpportunityStageReport)
+                {
+                    <tr>
+                        <td>@row.Label</td>
+                        <td>@row.Count</td>
+                        <td>₹@row.Value.ToString("N2")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <!-- CONVERSION REPORT -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 fw-bold">Conversion Report</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="p-4 bg-light rounded text-center">
+                        <div class="text-muted">
+                            Lead Conversion Rate
+                        </div>
+
+                        <h1 class="fw-bold">
+                            @Model.ConversionRate.ToString("N2")%
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="p-4 bg-light rounded text-center">
+                        <div class="text-muted">
+                            Total Leads
+                        </div>
+
+                        <h1 class="fw-bold">
+                            @Model.TotalLeads
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="p-4 bg-light rounded text-center">
+                        <div class="text-muted">
+                            Converted Leads
+                        </div>
+
+                        <h1 class="fw-bold">
+                            @Model.ConvertedLeads
+                        </h1>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- USER ACTIVITY REPORT -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 fw-bold">User Activity Report</h5>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-sm table-hover mb-0">
+
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Action</th>
+                        <th>Activity Count</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                @foreach (var row in Model.UserActivityReport)
+                {
+                    <tr>
+                        <td>@(row.UserId ?? "System")</td>
+                        <td>@row.Action</td>
+                        <td>@row.RecordId</td>
+                    </tr>
+                }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    <!-- AUDIT REPORT -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 fw-bold">Audit Report</h5>
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-sm table-hover mb-0">
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User ID</th>
+                        <th>Action</th>
+                        <th>Module</th>
+                        <th>Record</th>
+                        <th>IP Address</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                @foreach (var row in Model.AuditReport)
+                {
+                    <tr>
+                        <td>
+                            @row.Date.ToLocalTime().ToString("dd-MM-yyyy HH:mm")
+                        </td>
+                        <td>@(row.UserId ?? "System")</td>
+                        <td>@row.Action</td>
+                        <td>@row.EntityName</td>
+                        <td>@(row.RecordId ?? "-")</td>
+                        <td>@(row.IpAddress ?? "-")</td>
+                    </tr>
+                }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>

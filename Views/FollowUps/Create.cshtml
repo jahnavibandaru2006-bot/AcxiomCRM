@@ -1,0 +1,141 @@
+@model AcxiomCRM.Models.FollowUp
+
+@{
+    ViewData["Title"] = "Create Follow-Up";
+}
+
+<h1>Create Follow-Up</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="CustomerId" class="form-label">
+                    Customer
+                </label>
+
+                <select asp-for="CustomerId"
+                        class="form-select"
+                        asp-items="ViewBag.CustomerId">
+                    <option value="">-- Select Customer --</option>
+                </select>
+
+                <span asp-validation-for="CustomerId"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LeadId" class="form-label">
+                    Lead
+                </label>
+
+                <select asp-for="LeadId"
+                        class="form-select"
+                        asp-items="ViewBag.LeadId">
+                    <option value="">-- Select Lead --</option>
+                </select>
+
+                <span asp-validation-for="LeadId"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="OpportunityId" class="form-label">
+                    Opportunity
+                </label>
+
+                <select asp-for="OpportunityId"
+                        class="form-select"
+                        asp-items="ViewBag.OpportunityId">
+                    <option value="">-- Select Opportunity --</option>
+                </select>
+
+                <span asp-validation-for="OpportunityId"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="FollowUpDate" class="form-label">
+                    Follow-Up Date
+                </label>
+
+                <input asp-for="FollowUpDate"
+                       class="form-control"
+                       type="datetime-local" />
+
+                <span asp-validation-for="FollowUpDate"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Type" class="form-label">
+                    Type
+                </label>
+
+                <select asp-for="Type" class="form-select">
+                    <option value="Call">Call</option>
+                    <option value="Meeting">Meeting</option>
+                    <option value="Email">Email</option>
+                    <option value="Task">Task</option>
+                </select>
+
+                <span asp-validation-for="Type"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Status" class="form-label">
+                    Status
+                </label>
+
+                <select asp-for="Status" class="form-select">
+                    <option value="Planned">Planned</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Missed">Missed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+
+                <span asp-validation-for="Status"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Notes" class="form-label">
+                    Notes
+                </label>
+
+                <textarea asp-for="Notes"
+                          class="form-control"
+                          rows="4"></textarea>
+
+                <span asp-validation-for="Notes"
+                      class="text-danger"></span>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Create Follow-Up
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary ms-2">
+                Back to List
+            </a>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

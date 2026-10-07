@@ -1,0 +1,89 @@
+@model AcxiomCRM.Models.Lead
+
+@{
+    ViewData["Title"] = "Convert Lead";
+}
+
+<h1>Convert Lead</h1>
+
+<p class="text-muted">
+    Convert this qualified lead into a customer and optionally create an opportunity.
+</p>
+
+<hr />
+
+<div class="alert alert-info">
+    <strong>Lead:</strong> @Model.Name
+    <br />
+    <strong>Email:</strong> @Model.Email
+    <br />
+    <strong>Company:</strong> @(Model.Company ?? "-")
+    <br />
+    <strong>Status:</strong> @Model.Status
+</div>
+
+<div class="row">
+    <div class="col-md-7">
+
+        <form asp-action="Convert" method="post">
+
+            <input type="hidden"
+                   name="id"
+                   value="@Model.Id" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3"></div>
+
+            <div class="form-check mb-4">
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="createOpportunity"
+                       value="true"
+                       id="createOpportunity" />
+
+                <label class="form-check-label"
+                       for="createOpportunity">
+                    Create an Opportunity for this lead
+                </label>
+            </div>
+
+            <div class="mb-4">
+                <label for="opportunityAmount"
+                       class="form-label">
+                    Opportunity Amount
+                </label>
+
+                <input type="number"
+                       name="opportunityAmount"
+                       id="opportunityAmount"
+                       class="form-control"
+                       step="0.01"
+                       min="0.01"
+                       placeholder="Enter amount if creating opportunity" />
+
+                <div class="form-text">
+                    Required only when "Create an Opportunity" is selected.
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-success">
+                Convert Lead
+            </button>
+
+            <a asp-action="Details"
+               asp-route-id="@Model.Id"
+               class="btn btn-secondary ms-2">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
