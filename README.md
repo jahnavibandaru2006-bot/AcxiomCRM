@@ -1,4 +1,4 @@
-# AcxiomCRM
+# EnterpriseCRM
 
 A full-stack Customer Relationship Management (CRM) application built with **ASP.NET Core**, **Entity Framework Core**, **SQLite**, and **ASP.NET Core Identity**.
 
@@ -51,7 +51,7 @@ A full-stack Customer Relationship Management (CRM) application built with **ASP
 ## Project Structure
 
 ```text
-AcxiomCRM/
+AxiomCRM/
 ├── Controllers/
 ├── Data/
 ├── Migrations/
